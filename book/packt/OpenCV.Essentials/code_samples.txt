@@ -1,0 +1,36 @@
+With the supplied project files (.pro files), all examples compile with OpenCV version 2.4.9 using library path "c:\\opencv-buildQt\\install\\x64\mingw\\lib", except for the following.
+
+Chap. 4: The following examples compile with OpenCV 3.0, the path for the library is "c:\\Program Files (x86)\\opencv-master\\buildQT".
+	connectedComponents 
+	lineSegmentDetector
+	watershed
+	
+Chap. 5: The following examples compile with OpenCV 3.0, the path for the library is "c:\\Program Files (x86)\\opencv-master\\buildQT".
+	FASTDetector
+	KAZEDetector
+	matchingAKAZE
+	matchingSURF
+	ORBDetector
+	SURFDetector
+	
+Chap. 6: In all the examples in this chapter the .cpp file is called main.cpp. Besides, in the following example, OpenCV 3.0 is used, with a library path "C:\opencv-3.0\build".
+	textDetection
+	
+Chap. 7: All examples compile with OpenCV 3.0.
+	backgrouundSubKNN
+	findTransformECC
+	maxMovementFarneback
+	maxMovementLK
+	motionGradient
+	motionHistory
+	trackingCamShift
+	trackingMeanShift
+	videoCamera
+	
+Chap. 8:
+	edgesCPU: OpenCV 2.4.9 with CUDA support (the library must be compiled for CUDA and Visual C++).
+	edgesGPU (same)
+	KNNClassifier: OpenCV 3.0
+	matchTemplateGPU: OpenCV 2.4.9 with CUDA support (the library must be compiled for CUDA and Visual C++).
+	RFClassifier: OpenCV 3.0
+	SVMClassifier: OpenCV 3.0
