@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
     Mat image = imread("lena.jpg");
     Mat logo = imread("dataguru_logo.jpg");
-    Mat ROIimage = image(cv::Rect(385,270,logo.cols,logo.rows));
+    Mat ROIimage = image(cv::Rect(image.cols-logo.cols-10,image.rows-logo.rows-10,logo.cols,logo.rows));
     //Mat mask = imread("F:\\VS2010workplace\\cvTestLoge\\cvTestLoge\\logo.bmp",0);
     //logo.copyTo(ROIimage,mask);
     addWeighted(ROIimage,1.0,logo,0.7,0,ROIimage);

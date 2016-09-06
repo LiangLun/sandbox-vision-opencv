@@ -12,10 +12,10 @@ using namespace cv;
 
 int main(int argc, char* argv[])
 {
-    Mat image = imread("Boldt.jpg");
+    Mat image = imread("lena.jpg");
     Mat logo = imread("dataguru_logo.jpg");
-    printf("image.rows=%c\n",image.rows);
-    Mat ROIimage = image(cv::Rect(385,270,logo.cols,logo.rows));
+    // printf("image.rows=%d\n",image.row());
+    Mat ROIimage = image(cv::Rect(10,10,logo.cols,logo.rows));
     logo.copyTo(ROIimage);
     namedWindow("logo");
     imshow("logo",image);
