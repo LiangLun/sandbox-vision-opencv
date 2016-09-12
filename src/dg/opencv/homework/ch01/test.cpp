@@ -1,3 +1,7 @@
+/*
+《OpenCV第1课》书面作业
+按照PPT上的要求，在Windows或者Linux上安装好OpenCV软件，并且可以通过测试代码做使用。没安装成功的话，后续的课程就比较麻烦了哦~
+*/
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 int main(int argc, char* argv[]){

@@ -1,3 +1,9 @@
+/*
+找一张图片和一个logo,实现把logo叠加到图片上，类似于水印的效果。
+上传实现代码和效果图。
+TIPS：使用OpenCV先设置ROI，然后把ROI换成另外一个图片的Mat。
+*/
+
 // #include "stdafx.h"
 #include <iostream>
 #include <stdio.h>
