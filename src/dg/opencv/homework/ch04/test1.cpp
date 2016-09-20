@@ -5,6 +5,7 @@
  *
  */
 
+// #include "stdafx.h"
 #include <stdio.h>
 #include <vector>
 
@@ -15,7 +16,8 @@
 int main(int argc,char* argv[]){
 
 	//--1.读入图片
-	cv::Mat image = cv::imread("horse_hw.jpg");
+	// cv::Mat image = cv::imread("D:\\tmp\\image\\raccoon_hw.jpg");
+	cv::Mat image = cv::imread("raccoon_hw.jpg");
 
 	//--2.转换灰度图
 	cv::Mat gray;
@@ -39,15 +41,27 @@ int main(int argc,char* argv[]){
 	binary.copyTo(binary_copy);
 	cv::findContours(binary_copy,contours,CV_RETR_EXTERNAL/*获取外轮廓*/,CV_CHAIN_APPROX_NONE/*获取每个轮廓的每个像素*/);
 
-	//遍历每一个轮廓，把多余的轮廓去掉
-	std::vector<std::vector<cv::Point> >::const_iterator it=contours.begin();
+	// 遍历每一个轮廓，把多余的轮廓去掉
+	// 旧版本c++编译器
+	std::vector<std::vector<cv::Point> >::iterator it=contours.begin();
 	while(it!=contours.end()){
 		if(it->size()<500)
-			// it = contours.erase(it);
-                        contours.erase(const_iterator_cast(contours, it));
+			it = contours.erase(it);
 		else
 			++it;
 	}
+
+	// 遍历每一个轮廓，把多余的轮廓去掉
+	// 新版本c++编译器
+	/*
+	std::vector<std::vector<cv::Point> >::const_iterator it=contours.begin();
+	while(it!=contours.end()){
+		if(it->size()<500)
+			contours.erase(const_iterator_cast(contours, it));
+		else
+			++it;
+	}
+	*/
 
 	//重新绘制轮廓
 	cv::Mat dst(image.size(),CV_8U,cv::Scalar(0));

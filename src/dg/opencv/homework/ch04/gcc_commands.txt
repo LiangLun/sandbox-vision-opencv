@@ -1,6 +1,10 @@
 test.cpp
 g++ -o [target file] [source file] -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
 
-g++ -o test test.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
+// test1.cpp
+g++ -o test test1.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
 ./test
 
+// test2.cpp
+g++ -o test test2.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
+./test
