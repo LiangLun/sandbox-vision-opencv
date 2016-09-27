@@ -1,6 +1,3 @@
-test_simple_segment.cpp
-test_poly_roi.cpp
+# 适用于本节课的所有代码
 g++ -o [target file] [source file] -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
-
-
 
