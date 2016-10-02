@@ -11,13 +11,13 @@ static void help()
 {
     cout << "\nThis program demonstrates line finding with the Hough transform.\n"
             "Usage:\n"
-            "./houghlines <image_name>, Default is ./pic1.png\n" << endl;
+            "./houghlines <image_name>, Default is ./algori_hw.jpg\n" << endl;
 }
 
 int main(int argc, char** argv)
 {
     cv::CommandLineParser parser(argc, argv,
-        "{help h||}{@image|./pic1.png|}"
+        "{help h||}{@image|./algori_hw.jpg|}"
     );
     if (parser.has("help"))
     {
