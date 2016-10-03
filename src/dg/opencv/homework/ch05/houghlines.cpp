@@ -7,6 +7,10 @@
 using namespace cv;
 using namespace std;
 
+/*
+检测作业素材中“algori_hw.jpg”中的直线，在中间字母中的直线用绿色标记，字母以外的直线用蓝色标记，上传效果图。
+*/
+
 static void help()
 {
     cout << "\nThis program demonstrates line finding with the Hough transform.\n"
