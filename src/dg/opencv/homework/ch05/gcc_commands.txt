@@ -1,9 +1,13 @@
-# houghcircles.cpp
-g++ -o houghcircles houghcircles.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
 
 # houghlines.cpp
+# g++ -o [target file] [source file] -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
 g++ -o houghlines houghlines.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
 
-bgfg_segm.cpp
-g++ -o bgfg_segm bgfg_segm.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_video -lopencv_videoio—lstdc++
+# houghcircle.cpp
+# g++ -o [target file] [source file] -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
+g++ -o houghcircles houghcircles.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lstdc++
+
+# bgfg_segm.cpp
+# g++ -o [target file] [source file] -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_video -lopencv_videoio —lstdc++
+g++ -o bgfg_segm bgfg_segm.cpp -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_video -lopencv_videoio -lstdc++
 

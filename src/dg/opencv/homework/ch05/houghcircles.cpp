@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
     vector<Vec3f> circles;
     HoughCircles(img, circles, HOUGH_GRADIENT, 1, 10,
-                 100, 30, 1, 30 // change the last two parameters
+                 100, 30, 40, 60 // change the last two parameters
                                 // (min_radius & max_radius) to detect larger circles
                  );
     for( size_t i = 0; i < circles.size(); i++ )
