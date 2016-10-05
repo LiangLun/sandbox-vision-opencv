@@ -10,8 +10,10 @@ using namespace std;
 using namespace cv;
 
 /*
-使用bgfg_segm.cpp测试代码，对作业素材中“bike_hw.avi”视频中的骑单车的人做前景检测，微调效果,降低噪声，然后截图三张运行效果图上传。
-TIPS：在bgfg_segm.cpp代码85行附近，对每一帧生成的fmask使用上节课介绍的寻找轮廓,去掉多于的噪声，或者使用在早前的形态学、滤波器等方法去掉噪声。 
+使用bgfg_segm.cpp测试代码，对作业素材中“bike_hw.avi”视频中的骑单车的人做前景检测，
+微调效果,降低噪声，然后截图三张运行效果图上传。
+TIPS：在bgfg_segm.cpp代码85行附近，对每一帧生成的fmask使用上节课介绍的寻找轮廓,去掉多于的噪声，
+或者使用在早前的形态学、滤波器等方法去掉噪声。
 */
 
 static void help()

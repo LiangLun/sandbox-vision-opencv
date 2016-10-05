@@ -8,7 +8,8 @@ using namespace cv;
 using namespace std;
 
 /*
-检测作业素材中“algori_hw.jpg”中的直线，在中间字母中的直线用绿色标记，字母以外的直线用蓝色标记，上传效果图。
+检测作业素材中“algori_hw.jpg”中的直线，
+在中间字母中的直线用绿色标记，字母以外的直线用蓝色标记，上传效果图。
 */
 
 static void help()
@@ -64,6 +65,29 @@ int main(int argc, char** argv)
         line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
     }
 #else
+
+    // sub image 01
+    CvSize size01 = cvSize(40,50);//区域大小
+    cvSetImageROI(cdst,cvRect(60,70,size01.width, size01.height));//设置源图像ROI
+    IplImage* dst01 = cvCreateImage(size01,cdst->depth,cdst->nChannels);//创建目标图像
+    cvCopy(cdst,dst01); //复制图像
+    cvResetImageROI(dst01);//源图像用完后，清空ROI
+
+    // sub image 02
+    CvSize size02 = cvSize(40,50);//区域大小
+    cvSetImageROI(cdst,cvRect(60,70,size02.width, size02.height));//设置源图像ROI
+    IplImage* dst02 = cvCreateImage(size02,cdst->depth,cdst->nChannels);//创建目标图像
+    cvCopy(cdst,dst02); //复制图像
+    cvResetImageROI(dst02);//源图像用完后，清空ROI
+
+    // sub image 01
+    CvSize size03= cvSize(40,50);//区域大小
+    cvSetImageROI(cdst,cvRect(60,70,size03.width, size03.height));//设置源图像ROI
+    IplImage* dst03 = cvCreateImage(size03,cdst->depth,cdst->nChannels);//创建目标图像
+    cvCopy(cdst,dst03); //复制图像
+    cvResetImageROI(dst03);//源图像用完后，清空ROI
+
+    // all detected to red lines
     vector<Vec4i> lines;
     HoughLinesP(dst, lines, 1, CV_PI/180, 50, 50, 10 );
     for( size_t i = 0; i < lines.size(); i++ )

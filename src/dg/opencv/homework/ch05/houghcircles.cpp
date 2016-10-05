@@ -8,7 +8,8 @@ using namespace cv;
 using namespace std;
 
 /*
-检测作业素材中“algori_hw.jpg”中的三个圆，把圆的部分用红色标出来，上传效果图。
+检测作业素材中“algori_hw.jpg”中的三个圆，
+把圆的部分用红色标出来，上传效果图。
 */
 
 static void help()
