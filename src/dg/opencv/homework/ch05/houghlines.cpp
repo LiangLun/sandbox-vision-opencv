@@ -1,7 +1,8 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
-
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 
 using namespace cv;
@@ -21,7 +22,7 @@ static void help()
 
 int main(int argc, char** argv)
 {
-    cv::CommandLineParser parser(argc, argv,
+    CommandLineParser parser(argc, argv,
         "{help h||}{@image|./algori_hw.jpg|}"
     );
     if (parser.has("help"))
@@ -44,7 +45,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    Mat dst, cdst;
+    Mat dst, cdst, dst_sub, cdst_sub;
     Canny(src, dst, 50, 200, 3);
     cvtColor(dst, cdst, COLOR_GRAY2BGR);
 
@@ -66,36 +67,82 @@ int main(int argc, char** argv)
     }
 #else
 
-    // sub image 01
-    CvSize size01 = cvSize(40,50);//区域大小
-    cvSetImageROI(cdst,cvRect(60,70,size01.width, size01.height));//设置源图像ROI
-    IplImage* dst01 = cvCreateImage(size01,cdst->depth,cdst->nChannels);//创建目标图像
-    cvCopy(cdst,dst01); //复制图像
-    cvResetImageROI(dst01);//源图像用完后，清空ROI
+    // std::cout<<dst.type()<<std::endl;
+    // std::cout<<cdst.type()<<std::endl;
+    // std::cout<<CV_8UC1<<std::endl;
 
-    // sub image 02
-    CvSize size02 = cvSize(40,50);//区域大小
-    cvSetImageROI(cdst,cvRect(60,70,size02.width, size02.height));//设置源图像ROI
-    IplImage* dst02 = cvCreateImage(size02,cdst->depth,cdst->nChannels);//创建目标图像
-    cvCopy(cdst,dst02); //复制图像
-    cvResetImageROI(dst02);//源图像用完后，清空ROI
+    // // 区域大小
+    // CvSize size01 = cvSize(40,50);
+    // // 设置源图像ROI
+    // cvSetImageROI(cdst,cvRect(60,70,size01.width, size01.height));
+    // // 创建目标图像
+    // IplImage* dst01 = cvCreateImage(size01,cdst->depth,cdst->nChannels);
+    // // 复制图像
+    // cvCopy(cdst,dst01);
+    // // 源图像用完后，清空ROI
+    // cvResetImageROI(dst01);
 
-    // sub image 01
-    CvSize size03= cvSize(40,50);//区域大小
-    cvSetImageROI(cdst,cvRect(60,70,size03.width, size03.height));//设置源图像ROI
-    IplImage* dst03 = cvCreateImage(size03,cdst->depth,cdst->nChannels);//创建目标图像
-    cvCopy(cdst,dst03); //复制图像
-    cvResetImageROI(dst03);//源图像用完后，清空ROI
-
-    // all detected to red lines
+    // all detected to blue lines
     vector<Vec4i> lines;
     HoughLinesP(dst, lines, 1, CV_PI/180, 50, 50, 10 );
     for( size_t i = 0; i < lines.size(); i++ )
     {
         Vec4i l = lines[i];
-        line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
+        line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255,0,0), 3, LINE_AA);
     }
+
+    // sub image 01 all detected to green lines
+    Rect rect_1(330, 370, 200, 50);
+    dst_sub = dst(rect_1);
+    cvtColor(dst_sub, cdst_sub, COLOR_GRAY2BGR);
+    HoughLinesP(dst_sub, lines, 1, CV_PI/180, 50, 50, 10 );
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        Vec4i l = lines[i];
+        line( cdst_sub, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,255,0), 3, LINE_AA);
+    }
+    cdst_sub.copyTo(cdst(rect_1));
+
+    // sub image 02 all detected to green lines
+    Rect rect_2(280, 415, 410, 110);
+    dst_sub = dst(rect_2);
+    cvtColor(dst_sub, cdst_sub, COLOR_GRAY2BGR);
+    HoughLinesP(dst_sub, lines, 1, CV_PI/180, 50, 50, 10 );
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        Vec4i l = lines[i];
+        line( cdst_sub, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,255,0), 3, LINE_AA);
+    }
+    cdst_sub.copyTo(cdst(rect_2));
+
+    // sub image 03 all detected to green lines
+    Rect rect_3(430, 530, 140, 260);
+    dst_sub = dst(rect_3);
+    cvtColor(dst_sub, cdst_sub, COLOR_GRAY2BGR);
+    HoughLinesP(dst_sub, lines, 1, CV_PI/180, 50, 50, 10 );
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        Vec4i l = lines[i];
+        line( cdst_sub, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,255,0), 3, LINE_AA);
+    }
+    cdst_sub.copyTo(cdst(rect_3));
+
+    // sub image 04 all detected to green lines
+    Rect rect_4(100, 780, 510, 199);
+    dst_sub = dst(rect_4);
+    cvtColor(dst_sub, cdst_sub, COLOR_GRAY2BGR);
+    HoughLinesP(dst_sub, lines, 1, CV_PI/180, 50, 50, 10 );
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        Vec4i l = lines[i];
+        line( cdst_sub, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,255,0), 3, LINE_AA);
+    }
+    cdst_sub.copyTo(cdst(rect_4));
+
 #endif
+
+    imwrite("detected lines.jpg", cdst);
+
     imshow("source", src);
     imshow("detected lines", cdst);
 
