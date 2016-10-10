@@ -8,7 +8,8 @@ using namespace cv;
 using namespace std;
 
 /*
-检测作业素材中“algori_hw.jpg”中的三个圆，把圆的部分用红色标出来，上传效果图。
+检测作业素材中“algori_hw.jpg”中的三个圆，
+把圆的部分用红色标出来，上传效果图。
 */
 
 static void help()
@@ -49,12 +50,13 @@ int main(int argc, char** argv)
 
     vector<Vec3f> circles;
     // HoughCircles(img, circles, HOUGH_GRADIENT, 1, 10,
-    //              100, 30, 40, 60 // change the last two parameters
+    //              100, 30, 1, 30 // change the last two parameters
     //                             // (min_radius & max_radius) to detect larger circles
     //              );
-    HoughCircles(img, circles, HOUGH_GRADIENT, 1, 80,
-                 100, 30, 40, 120 // change the last two parameters
-                                // (min_radius & max_radius) to detect larger circles
+    HoughCircles(img, circles, HOUGH_GRADIENT, 1, 210,
+                 100, 30,
+                 40, 120 // change the last two parameters
+                         // (min_radius & max_radius) to detect larger circles
                  );
     for( size_t i = 0; i < circles.size(); i++ )
     {
@@ -63,6 +65,7 @@ int main(int argc, char** argv)
         circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
     }
 
+    imwrite("detected circles.jpg", cimg);
     imshow("detected circles", cimg);
     waitKey();
 
