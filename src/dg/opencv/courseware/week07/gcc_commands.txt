@@ -1,2 +1,9 @@
+
 test_svm.cpp/test_knn.cpp
+
 g++ -o test_svm  test_svm.cpp -lopencv_ml -lopencv_objdetect -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -std=c++11
+g++ -o test_svm  test_svm.cpp -lopencv_ml -lopencv_objdetect -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -std=c++11 -I /usr/local/include/ -L /usr/local/lib
+
+
+
+
