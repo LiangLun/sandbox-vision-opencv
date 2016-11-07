@@ -1,6 +1,7 @@
 
 test_flann_match.cpp
 g++ -o test_flann_match test_flann_match.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_ml -lopencv_xfeatures2d -lopencv_features2d  -lopencv_flann -std=c++11
+./test_flann_match box.png box_in_scene.png
 
 
 test_em.cpp
