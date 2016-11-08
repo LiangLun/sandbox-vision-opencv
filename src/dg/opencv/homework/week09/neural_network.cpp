@@ -38,9 +38,12 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
             //将样本和对应的标签加入集合
             // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
             images.push_back(gray_img.reshape(0,1));
+            // Mat new_label = Mat::zeros(1, 10, labels.type());
+            // new_label(class_label, 1) = 1;
             labels.push_back(class_label);
         }
         images.convertTo(images, CV_32FC1);             // to float
+        labels.convertTo(labels, CV_32FC1);             // to float
         isSuccess = true;
     }
     else
@@ -122,20 +125,21 @@ int main()
     // randn(data, Mat::zeros(1, 1, data.type()), Mat::ones(1, 1, data.type()));
 
     // //half of the samples for each class
-    // Mat_<float> responses(data.rows, 2);
-    // for (int i = 0; i<data.rows; ++i)
-    // {
-    //     if (i < data.rows/2)
-    //     {
-    //         responses(i, 0) = 1;
-    //         responses(i, 1) = 0;
-    //     }
-    //     else
-    //     {
-    //         responses(i, 0) = 0;
-    //         responses(i, 1) = 1;
-    //     }
-    // }
+    Mat_<float> responses(labels.rows, 10);
+    for (int i = 0; i<labels.rows; ++i)
+    {
+        for (int j = 0; j<10;++j)
+        {
+            if (j == labels(i,0))
+            {
+                responses(i, 1) = 1;
+            }
+            else
+            {
+                responses(i, 1) = 0;
+            }
+        }
+    }
 
     /*
     //example code for just a single response (regression)
@@ -148,7 +152,7 @@ int main()
     Mat_<int> layerSizes(1, 3);
     layerSizes(0, 0) = images.cols;
     layerSizes(0, 1) = 20;
-    layerSizes(0, 2) = labels.cols;
+    layerSizes(0, 2) = responses.cols;
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
     network->setLayerSizes(layerSizes);
@@ -156,7 +160,7 @@ int main()
     network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
     
     cout << "create train data" << endl;
-    Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, labels);
+    Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, responses);
 
     cout << "start train" << endl;
     network->train(trainData);
@@ -171,7 +175,7 @@ int main()
         for (int i=0; i<images.rows; ++i)
         {
             network->predict(images.row(i), result);
-            cout << result << endl;
+            cout << result << responses.row(i) << endl;
         }
     }
 
