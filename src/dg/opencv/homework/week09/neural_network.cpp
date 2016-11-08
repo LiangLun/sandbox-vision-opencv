@@ -100,8 +100,8 @@ int main()
     };
 
     size_t ImgCountPerBatch = 10000;
-    Mat images;
-    Mat labels;
+    Mat_<float> images;
+    Mat_<float> labels;
     bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
     // if (success)
     // {
