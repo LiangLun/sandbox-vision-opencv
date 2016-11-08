@@ -157,6 +157,7 @@ int main()
     cout << "create train data" << endl;
     Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, labels);
 
+    cout << "start train" << endl;
     network->train(trainData);
     if (network->isTrained())
     {
