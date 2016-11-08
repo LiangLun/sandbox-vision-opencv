@@ -84,7 +84,7 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
 
 int main()
 {
-    const string dir = "./cifar-10-batches-bin";
+    const string dir = "./cifar-10-batches-bin/";
     const string class_names[10] =
     {
         "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"
