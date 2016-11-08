@@ -37,7 +37,7 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
             Mat float_data;
             rgb_img.convertTo(float_data, CV_32FC1);             // to float
             // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
-            images.push_back(float_data);
+            images.push_back(float_data.reshape(1,1));
             labels.push_back(class_label);
         }
         isSuccess = true;
