@@ -53,9 +53,42 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
     return isSuccess;
 }
 
-int main1(int argc, char* argv[])
+// int main1(int argc, char* argv[])
+// {
+//     const string dir = "F:\\cifar-10-binary\\cifar-10-batches-bin\\";
+//     const string class_names[10] =
+//     {
+//         "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"
+//     };
+//     const string batch_names[6] =
+//     {
+//         "data_batch_1.bin", "data_batch_2.bin", "data_batch_3.bin",
+//         "data_batch_4.bin", "data_batch_5.bin", "test_batch.bin"
+//     };
+
+//     size_t ImgCountPerBatch = 10000;
+//     vector<Mat> images;
+//     vector<int> labels;
+//     bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
+//     if (success)
+//     {
+//         for (size_t imgIdx = 0; imgIdx < images.size(); imgIdx++)
+//         {
+//             Mat BigImg; cv::resize(images[imgIdx], BigImg, Size(128, 128));
+//             imshow("cifar image", BigImg);
+//             cout << "image index: "<<imgIdx<<"---->class label,name :" 
+//                 << labels[imgIdx] << "<->" << class_names[labels[imgIdx]] << endl;
+//             cv::waitKey(5);
+//         }
+//     }
+
+//     system("pause");
+//     return 0;
+// }
+
+int main()
 {
-    const string dir = "F:\\cifar-10-binary\\cifar-10-batches-bin\\";
+    const string dir = "./cifar-10-batches-bin";
     const string class_names[10] =
     {
         "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"
@@ -70,43 +103,39 @@ int main1(int argc, char* argv[])
     vector<Mat> images;
     vector<int> labels;
     bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
-    if (success)
-    {
-        for (size_t imgIdx = 0; imgIdx < images.size(); imgIdx++)
-        {
-            Mat BigImg; cv::resize(images[imgIdx], BigImg, Size(128, 128));
-            imshow("cifar image", BigImg);
-            cout << "image index: "<<imgIdx<<"---->class label,name :" 
-                << labels[imgIdx] << "<->" << class_names[labels[imgIdx]] << endl;
-            cv::waitKey(5);
-        }
-    }
+    // if (success)
+    // {
+    //     for (size_t imgIdx = 0; imgIdx < images.size(); imgIdx++)
+    //     {
+    //         Mat BigImg; cv::resize(images[imgIdx], BigImg, Size(128, 128));
+    //         imshow("cifar image", BigImg);
+    //         cout << "image index: "<<imgIdx<<"---->class label,name :" 
+    //             << labels[imgIdx] << "<->" << class_names[labels[imgIdx]] << endl;
+    //         cv::waitKey(5);
+    //     }
+    // }
 
-    system("pause");
-    return 0;
-}
+    // system("pause");
+    // return 0;
+    // //create random training data
+    // Mat_<float> data(100, 100);
+    // randn(data, Mat::zeros(1, 1, data.type()), Mat::ones(1, 1, data.type()));
 
-int main()
-{
-    //create random training data
-    Mat_<float> data(100, 100);
-    randn(data, Mat::zeros(1, 1, data.type()), Mat::ones(1, 1, data.type()));
-
-    //half of the samples for each class
-    Mat_<float> responses(data.rows, 2);
-    for (int i = 0; i<data.rows; ++i)
-    {
-        if (i < data.rows/2)
-        {
-            responses(i, 0) = 1;
-            responses(i, 1) = 0;
-        }
-        else
-        {
-            responses(i, 0) = 0;
-            responses(i, 1) = 1;
-        }
-    }
+    // //half of the samples for each class
+    // Mat_<float> responses(data.rows, 2);
+    // for (int i = 0; i<data.rows; ++i)
+    // {
+    //     if (i < data.rows/2)
+    //     {
+    //         responses(i, 0) = 1;
+    //         responses(i, 1) = 0;
+    //     }
+    //     else
+    //     {
+    //         responses(i, 0) = 0;
+    //         responses(i, 1) = 1;
+    //     }
+    // }
 
     /*
     //example code for just a single response (regression)
@@ -117,28 +146,28 @@ int main()
 
     //create the neural network
     Mat_<int> layerSizes(1, 3);
-    layerSizes(0, 0) = data.cols;
+    layerSizes(0, 0) = 32*32;
     layerSizes(0, 1) = 20;
-    layerSizes(0, 2) = responses.cols;
+    layerSizes(0, 2) = 10;
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
     network->setLayerSizes(layerSizes);
     network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
     network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
-    Ptr<TrainData> trainData = TrainData::create(data, ROW_SAMPLE, responses);
+    Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, labels);
 
     network->train(trainData);
     if (network->isTrained())
     {
-        printf("Predict one-vector:\n");
-        Mat result;
-        network->predict(Mat::ones(1, data.cols, data.type()), result);
-        cout << result << endl;
+        // printf("Predict one-vector:\n");
+        // Mat result;
+        // network->predict(Mat::ones(1, data.cols, data.type()), result);
+        // cout << result << endl;
 
         printf("Predict training data:\n");
-        for (int i=0; i<data.rows; ++i)
+        for (int i=0; i<images.rows; ++i)
         {
-            network->predict(data.row(i), result);
+            network->predict(images.row(i), result);
             cout << result << endl;
         }
     }
