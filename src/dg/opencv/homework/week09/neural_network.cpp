@@ -146,9 +146,9 @@ int main()
 
     //create the neural network
     Mat_<int> layerSizes(1, 3);
-    layerSizes(0, 0) = 32*32;
+    layerSizes(0, 0) = images.cols;
     layerSizes(0, 1) = 20;
-    layerSizes(0, 2) = 10;
+    layerSizes(0, 2) = labels.cols;
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
     network->setLayerSizes(layerSizes);
