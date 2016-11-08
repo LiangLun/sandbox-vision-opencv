@@ -9,7 +9,7 @@ using namespace std;
 using namespace cv;
 using namespace cv::ml;
 
-bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t imgCount, vector<Mat>& images, vector<int>& labels)
+bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t imgCount, Mat& images, Mat& labels)
 {
     const int PATCH_SIZE = 32;          //图像块的尺寸: 32*32
     const int N_CHANEL = 3;             //通道数
@@ -100,8 +100,8 @@ int main()
     };
 
     size_t ImgCountPerBatch = 10000;
-    vector<Mat> images;
-    vector<int> labels;
+    Mat images;
+    int labels;
     bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
     // if (success)
     // {
@@ -168,9 +168,9 @@ int main()
         // cout << result << endl;
 
         printf("Predict training data:\n");
-        for (int i=0; i<images.size(); ++i)
+        for (int i=0; i<images.rows(); ++i)
         {
-            network->predict(images[i], result);
+            network->predict(images.row(i), result);
             cout << result << endl;
         }
     }
