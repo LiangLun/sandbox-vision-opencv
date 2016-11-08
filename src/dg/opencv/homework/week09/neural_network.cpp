@@ -34,7 +34,10 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
             Mat rgb_img;
             cv::merge(bgrMats, rgb_img);//RGB通道融合
             //将样本和对应的标签加入集合
-            images.push_back(rgb_img);
+            Mat float_data;
+            rgb_img.convertTo(float_data, CV_32FC1);             // to float
+            // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
+            images.push_back(float_data);
             labels.push_back(class_label);
         }
         isSuccess = true;
@@ -150,6 +153,8 @@ int main()
     network->setLayerSizes(layerSizes);
     network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
     network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
+    
+    cout << "create train data" << endl;
     Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, labels);
 
     network->train(trainData);
