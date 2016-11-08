@@ -168,7 +168,7 @@ int main()
         // cout << result << endl;
 
         printf("Predict training data:\n");
-        for (int i=0; i<images.rows(); ++i)
+        for (int i=0; i<images.rows; ++i)
         {
             network->predict(images.row(i), result);
             cout << result << endl;
