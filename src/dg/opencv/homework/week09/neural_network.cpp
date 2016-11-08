@@ -1,17 +1,13 @@
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <opencv2/opencv.hpp>
 #include <opencv2/ml/ml.hpp>
 
 using namespace std;
 using namespace cv;
 using namespace cv::ml;
-
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <opencv2\opencv.hpp>
-
-using namespace std;
-using namespace cv;
 
 bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t imgCount, vector<Mat>& images, vector<int>& labels)
 {
@@ -160,14 +156,14 @@ int main()
     if (network->isTrained())
     {
         // printf("Predict one-vector:\n");
-        // Mat result;
+        Mat result;
         // network->predict(Mat::ones(1, data.cols, data.type()), result);
         // cout << result << endl;
 
         printf("Predict training data:\n");
-        for (int i=0; i<images.rows; ++i)
+        for (int i=0; i<images.size(); ++i)
         {
-            network->predict(images.row(i), result);
+            network->predict(images[i], result);
             cout << result << endl;
         }
     }
