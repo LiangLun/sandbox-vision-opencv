@@ -33,13 +33,14 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
             vector<Mat> bgrMats = { blue_img, green_img, red_img };//OpenCV的通道顺序是BGR
             Mat rgb_img;
             cv::merge(bgrMats, rgb_img);//RGB通道融合
+            cv::Mat gray_img;
+            cv::cvtColor(rgb_img,gray_img,CV_BGR2GRAY);
             //将样本和对应的标签加入集合
-            Mat float_data;
-            rgb_img.convertTo(float_data, CV_32FC1);             // to float
             // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
-            images.push_back(float_data.reshape(1,1));
+            images.push_back(gray_img.reshape(0,1));
             labels.push_back(class_label);
         }
+        images.convertTo(images, CV_32FC1);             // to float
         isSuccess = true;
     }
     else
