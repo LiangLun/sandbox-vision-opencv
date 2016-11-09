@@ -89,6 +89,23 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
 //     return 0;
 // }
 
+int getPredictedClass(const cv::Mat& predictions)
+{
+  float maxPrediction = predictions.at<float>(0);
+  float maxPredictionIndex = 0;
+  const float* ptrPredictions = predictions.ptr<float>(0);
+  for (int i = 0; i < predictions.cols; i++)
+  {
+      float prediction = *ptrPredictions++;
+      if (prediction > maxPrediction)
+      {
+          maxPrediction = prediction;
+          maxPredictionIndex = i;
+      }
+  }
+  return maxPredictionIndex;
+}
+
 int main()
 {
     const string dir = "./cifar-10-batches-bin/";
@@ -162,8 +179,9 @@ int main()
     cout << "create train data" << endl;
     Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, responses);
 
-    cout << "start train" << endl;
+    cout << "start train ..." << endl;
     network->train(trainData);
+    cout << "network train complete ..." << endl;
     if (network->isTrained())
     {
         // printf("Predict one-vector:\n");
@@ -175,7 +193,7 @@ int main()
         for (int i=0; i<images.rows; ++i)
         {
             network->predict(images.row(i), result);
-            cout << result << responses.row(i) << endl;
+            cout << getPredictedClass(output) << responses.row(i) << endl;
         }
     }
 
