@@ -11,31 +11,34 @@ using namespace cv::ml;
 
 bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t imgCount, Mat& images, Mat& labels)
 {
-    const int PATCH_SIZE = 32;          //图像块的尺寸: 32*32
-    const int N_CHANEL = 3;             //通道数
-    const int LINE_LENGTH = PATCH_SIZE * PATCH_SIZE * N_CHANEL + 1;//以字节为单位
+    // image block size : 32*32
+    const int PATCH_SIZE = 32;
+    // chanel count
+    const int N_CHANEL = 3;
+    // byte count per line
+    const int LINE_LENGTH = PATCH_SIZE * PATCH_SIZE * N_CHANEL + 1;
 
     bool isSuccess = false;
 
-    fstream fs(dir + batchName, ios::in | ios::binary);//以二进制方式读取
+    // read by binary
+    fstream fs(dir + batchName, ios::in | ios::binary);
 
     if (fs.is_open())
     {
-        cout << "成功打开文件: " << batchName << endl;
+        cout << "success for open file : " << batchName << endl;
         char buffer[LINE_LENGTH];
         for (size_t imgIdx = 0; imgIdx < imgCount; imgIdx++)
         {
             fs.read(buffer, LINE_LENGTH);
-            int class_label = (int)buffer[0];//类别标签:buffer[0]
-            Mat red_img(32, 32, CV_8UC1, &buffer[1]);//红色通道：buffer[1->1024]
-            Mat green_img(32, 32, CV_8UC1, &buffer[1025]);//绿色通道：buffer[1025->2048]
-            Mat blue_img(32, 32, CV_8UC1, &buffer[2049]);//蓝色通道：buffer[2049->3072]
-            vector<Mat> bgrMats = { blue_img, green_img, red_img };//OpenCV的通道顺序是BGR
+            int class_label = (int)buffer[0]; // class_label : buffer[0]
+            Mat red_img(32, 32, CV_8UC1, &buffer[1]);      // red chanel : buffer[1->1024]
+            Mat green_img(32, 32, CV_8UC1, &buffer[1025]); // green chanel : buffer[1025->2048]
+            Mat blue_img(32, 32, CV_8UC1, &buffer[2049]);  // blue chanel : buffer[2049->3072]
+            vector<Mat> bgrMats = { blue_img, green_img, red_img }; // OpenCV's chanel seq is BGR
             Mat rgb_img;
-            cv::merge(bgrMats, rgb_img);//RGB通道融合
+            cv::merge(bgrMats, rgb_img); //merge RGB
             cv::Mat gray_img;
             cv::cvtColor(rgb_img,gray_img,CV_BGR2GRAY);
-            //将样本和对应的标签加入集合
             // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
             images.push_back(gray_img.reshape(0,1));
             // Mat new_label = Mat::zeros(1, 10, labels.type());
@@ -48,7 +51,7 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
     }
     else
     {
-        cout << "无法打开文件: " << batchName << endl;
+        cout << "can't load file : " << batchName << endl;
         isSuccess = false;
     }
 
