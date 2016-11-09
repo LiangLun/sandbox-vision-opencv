@@ -196,7 +196,7 @@ int main()
         for (int i=0; i<images.rows; ++i)
         {
             network->predict(images.row(i), result);
-            cout << getPredictedClass(result) << responses.row(i) << endl;
+            cout << result << getPredictedClass(result) << responses.row(i) << endl;
         }
     }
 
