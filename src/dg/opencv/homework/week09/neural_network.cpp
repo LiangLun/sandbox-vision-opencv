@@ -3,23 +3,25 @@
 #include <fstream>
 #include <vector>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/ml/ml.hpp>
 
 using namespace std;
 using namespace cv;
 using namespace cv::ml;
 
-bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t imgCount, Mat& images, Mat& labels)
+bool loadData(const string& dir, const string& batchName, size_t imgCount, Mat& images, vector<int>& labels)
 {
     // image block size : 32*32
     const int PATCH_SIZE = 32;
-    // chanel count
+    // chanel count (RGB)
     const int N_CHANEL = 3;
     // byte count per line
     const int LINE_LENGTH = PATCH_SIZE * PATCH_SIZE * N_CHANEL + 1;
-
     bool isSuccess = false;
-
     // read by binary
     fstream fs(dir + batchName, ios::in | ios::binary);
 
@@ -30,23 +32,26 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
         for (size_t imgIdx = 0; imgIdx < imgCount; imgIdx++)
         {
             fs.read(buffer, LINE_LENGTH);
-            int class_label = (int)buffer[0]; // class_label : buffer[0]
-            Mat red_img(32, 32, CV_8UC1, &buffer[1]);      // red chanel : buffer[1->1024]
-            Mat green_img(32, 32, CV_8UC1, &buffer[1025]); // green chanel : buffer[1025->2048]
-            Mat blue_img(32, 32, CV_8UC1, &buffer[2049]);  // blue chanel : buffer[2049->3072]
-            vector<Mat> bgrMats = { blue_img, green_img, red_img }; // OpenCV's chanel seq is BGR
+            // class_label : buffer[0]
+            // red chanel : buffer[1->1024]
+            // green chanel : buffer[1025->2048]
+            // blue chanel : buffer[2049->3072]
+            int class_label = (int)buffer[0];
+            Mat red_chanel(32, 32, CV_8UC1, &buffer[1]);
+            Mat green_chanel(32, 32, CV_8UC1, &buffer[1025]);
+            Mat blue_chanel(32, 32, CV_8UC1, &buffer[2049]);
+            // OpenCV's chanel seq is BGR
+            vector<Mat> bgrMats = { blue_chanel, green_chanel, red_chanel };
             Mat rgb_img;
-            cv::merge(bgrMats, rgb_img); //merge RGB
-            cv::Mat gray_img;
-            cv::cvtColor(rgb_img,gray_img,CV_BGR2GRAY);
-            // train_data.push_back( float_data.reshape(1,1) ); // add 1 row (flattened image)
-            images.push_back(gray_img.reshape(0,1));
-            // Mat new_label = Mat::zeros(1, 10, labels.type());
-            // new_label(class_label, 1) = 1;
+            // merge RGB chanle
+            merge(bgrMats, rgb_img);
+            Mat gray_img;
+            cvtColor(rgb_img, gray_img, CV_RGB2GRAY);
+            gray_img = gray_img.reshape(0,1);
+            gray_img.convertTo(gray_img, CV_32FC1);
+            images.push_back(gray_img);
             labels.push_back(class_label);
         }
-        images.convertTo(images, CV_32FC1);             // to float
-        labels.convertTo(labels, CV_32FC1);             // to float
         isSuccess = true;
     }
     else
@@ -59,40 +64,7 @@ bool ReadCifar10DataBatch(const string& dir, const string& batchName, size_t img
     return isSuccess;
 }
 
-// int main1(int argc, char* argv[])
-// {
-//     const string dir = "F:\\cifar-10-binary\\cifar-10-batches-bin\\";
-//     const string class_names[10] =
-//     {
-//         "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"
-//     };
-//     const string batch_names[6] =
-//     {
-//         "data_batch_1.bin", "data_batch_2.bin", "data_batch_3.bin",
-//         "data_batch_4.bin", "data_batch_5.bin", "test_batch.bin"
-//     };
-
-//     size_t ImgCountPerBatch = 10000;
-//     vector<Mat> images;
-//     vector<int> labels;
-//     bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
-//     if (success)
-//     {
-//         for (size_t imgIdx = 0; imgIdx < images.size(); imgIdx++)
-//         {
-//             Mat BigImg; cv::resize(images[imgIdx], BigImg, Size(128, 128));
-//             imshow("cifar image", BigImg);
-//             cout << "image index: "<<imgIdx<<"---->class label,name :" 
-//                 << labels[imgIdx] << "<->" << class_names[labels[imgIdx]] << endl;
-//             cv::waitKey(5);
-//         }
-//     }
-
-//     system("pause");
-//     return 0;
-// }
-
-int getPredictedClass(const cv::Mat& predictions)
+int getPredictedClass(const Mat& predictions)
 {
   float maxPrediction = predictions.at<float>(0);
   float maxPredictionIndex = 0;
@@ -123,55 +95,52 @@ int main()
     };
 
     size_t ImgCountPerBatch = 10000;
-    Mat_<float> images;
-    Mat_<float> labels;
-    bool success = ReadCifar10DataBatch(dir, batch_names[2], ImgCountPerBatch, images, labels);
-    // if (success)
-    // {
-    //     for (size_t imgIdx = 0; imgIdx < images.size(); imgIdx++)
-    //     {
-    //         Mat BigImg; cv::resize(images[imgIdx], BigImg, Size(128, 128));
-    //         imshow("cifar image", BigImg);
-    //         cout << "image index: "<<imgIdx<<"---->class label,name :" 
-    //             << labels[imgIdx] << "<->" << class_names[labels[imgIdx]] << endl;
-    //         cv::waitKey(5);
-    //     }
-    // }
+    Mat_<float> images_train;
+    vector<int> labels_train;
+    Mat_<float> images_test;
+    vector<int> labels_test;
+    bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images_train, labels_train);
+    success = loadData(dir, batch_names[1], ImgCountPerBatch, images_train, labels_train);
+    success = loadData(dir, batch_names[2], ImgCountPerBatch, images_train, labels_train);
+    success = loadData(dir, batch_names[3], ImgCountPerBatch, images_train, labels_train);
+    success = loadData(dir, batch_names[4], ImgCountPerBatch, images_train, labels_train);
+    success = loadData(dir, batch_names[5], ImgCountPerBatch, images_test, labels_test);
 
-    // system("pause");
-    // return 0;
-    // //create random training data
-    // Mat_<float> data(100, 100);
-    // randn(data, Mat::zeros(1, 1, data.type()), Mat::ones(1, 1, data.type()));
-
-    // //half of the samples for each class
-    Mat_<float> responses(labels.rows, 10);
-    for (int i = 0; i<labels.rows; ++i)
+    Mat_<float> responses(labels_train.size(), 10);
+    for (int i = 0; i<labels_train.size(); ++i)
     {
         for (int j = 0; j<10;++j)
         {
-            if (j == labels(i,0))
+            if (j == labels_train[i])
             {
-                responses(i, 1) = 1;
+                responses(i, j) = 1;
             }
             else
             {
-                responses(i, 1) = 0;
+                responses(i, j) = 0;
+            }
+        }
+    }
+    Mat_<float> responses_test(labels_test.size(), 10);
+    for (int i = 0; i<labels_test.size(); ++i)
+    {
+        for (int j = 0; j<10;++j)
+        {
+            if (j == labels_test[i])
+            {
+                responses_test(i, j) = 1;
+            }
+            else
+            {
+                responses_test(i, j) = 0;
             }
         }
     }
 
-    /*
-    //example code for just a single response (regression)
-    Mat_<float> responses(data.rows, 1);
-    for (int i=0; i<responses.rows; ++i)
-        responses(i, 0) = i < responses.rows / 2 ? 0 : 1;
-    */
-
-    //create the neural network
+    // Create the neural network
     Mat_<int> layerSizes(1, 3);
-    layerSizes(0, 0) = images.cols;
-    layerSizes(0, 1) = 20;
+    layerSizes(0, 0) = images_train.cols;
+    layerSizes(0, 1) = 1000;
     layerSizes(0, 2) = responses.cols;
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
@@ -179,25 +148,45 @@ int main()
     network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
     network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
     
-    cout << "create train data" << endl;
-    Ptr<TrainData> trainData = TrainData::create(images, ROW_SAMPLE, responses);
+    printf("Create train data ...\n");
+    Ptr<TrainData> trainData = TrainData::create(images_train, ROW_SAMPLE, responses);
 
-    cout << "start train ..." << endl;
+    printf("Start training ...\n");
     network->train(trainData);
-    cout << "network train complete ..." << endl;
+    printf("Complete training ...\n");
     if (network->isTrained())
     {
-        // printf("Predict one-vector:\n");
         Mat result;
-        // network->predict(Mat::ones(1, data.cols, data.type()), result);
-        // cout << result << endl;
 
         printf("Predict training data:\n");
-        for (int i=0; i<images.rows; ++i)
+
+        // compute prediction error on train data
+        double train_hr = 0, test_hr = 0;
+        for (int i = 0; i < images_train.rows; i++)
         {
-            network->predict(images.row(i), result);
-            cout << result << getPredictedClass(result) << responses.row(i) << endl;
+            Mat sample = images_train.row(i);
+            network->predict(sample, result);
+            float r = getPredictedClass(result) == labels_train[i] ? 1.f : 0.f;
+            train_hr += r;
         }
+        train_hr /= images_train.rows;
+
+        printf("Predict test data:\n");
+
+        // compute prediction error on test data
+        for (int i = 0; i < images_test.rows; i++)
+        {
+            Mat sample = images_test.row(i);
+            network->predict(sample, result);
+            float r = getPredictedClass(result) == labels_test[i] ? 1.f : 0.f;
+            test_hr += r;
+        }
+        cout << test_hr << images_test.rows << endl;
+        test_hr /= images_test.rows;
+    
+        printf("accuracy: train = %.1f%%, test = %.1f%%\n", train_hr*100., test_hr*100.);
+
+        cout << test_hr << images_test.rows << endl;
     }
 
     return 0;
