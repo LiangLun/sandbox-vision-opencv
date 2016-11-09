@@ -9,4 +9,7 @@ https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
 https://www.cs.toronto.edu/~kriz/cifar-10-matlab.tar.gz
 https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz
 
+wget https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz
+tar -zxvf cifar-10-binary.tar.gz
+
 
