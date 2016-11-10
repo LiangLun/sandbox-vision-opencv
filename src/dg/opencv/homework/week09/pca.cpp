@@ -173,10 +173,14 @@ int main()
     }
 
     // Create the neural network
-    Mat_<int> layerSizes(1, 4);
+    // Mat_<int> layerSizes(1, 4);
+    // layerSizes(0, 0) = images_train.cols;
+    // layerSizes(0, 1) = 50;
+    // layerSizes(0, 2) = 20;
+    // layerSizes(0, 3) = responses.cols;
+    Mat_<int> layerSizes(1, 3);
     layerSizes(0, 0) = images_train.cols;
     layerSizes(0, 1) = 500;
-    // layerSizes(0, 2) = 20;
     layerSizes(0, 2) = responses.cols;
 
     cout << "image_train.cols :" << images_train.cols << endl;
