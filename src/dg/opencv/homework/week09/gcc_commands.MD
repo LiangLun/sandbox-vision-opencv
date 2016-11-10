@@ -1,7 +1,7 @@
 
-neural_network.cpp
-g++ -o neural_network neural_network.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_ml -std=c++11
-
+ann_mlp.cpp
+g++ -o ann_mlp ann_mlp.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_ml -std=c++11
+./ann_mlp
 
 
 https://www.cs.toronto.edu/~kriz/cifar.html
