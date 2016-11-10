@@ -99,7 +99,7 @@ int main()
     Mat images_pca;
     Mat_<float> images_train;
     vector<int> labels_train;
-    
+    at_<float> images_test;
     vector<int> labels_test;
     bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images, labels_train);
     success = loadData(dir, batch_names[1], ImgCountPerBatch, images, labels_train);
@@ -112,10 +112,9 @@ int main()
     
     images.clear()
     success = loadData(dir, batch_names[5], ImgCountPerBatch, images, labels_test);
-    Mat_<float> images_test(images.size(), images.at(0).size(), CV_64FC1);
-    for(int i=0; i<images_test.rows; ++i)
-         for(int j=0; j<images_test.cols; ++j)
-              images_test.at<double>(i, j) = images.at(i).at(j);
+    for(int i=0; i<images.size(); ++i)
+        images_test.push_back(images[i]);
+    images_test.convertTo(images_test, CV_32FC1);
 
     Mat_<float> responses(labels_train.size(), 10);
     for (int i = 0; i<labels_train.size(); ++i)
