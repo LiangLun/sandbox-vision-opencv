@@ -81,6 +81,18 @@ int getPredictedClass(const Mat& predictions)
   return maxPredictionIndex;
 }
 
+static  Mat formatImagesForPCA(const vector<Mat> &data)
+{
+    Mat dst(static_cast<int>(data.size()), data[0].rows*data[0].cols, CV_32F);
+    for(unsigned int i = 0; i < data.size(); i++)
+    {
+        Mat image_row = data[i].clone().reshape(1,1);
+        Mat row_i = dst.row(i);
+        image_row.convertTo(row_i,CV_32F);
+    }
+    return dst;
+}
+
 int main()
 {
     const string dir = "./cifar-10-batches-bin/";
