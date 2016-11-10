@@ -99,7 +99,7 @@ int main()
     Mat images_pca;
     Mat_<float> images_train;
     vector<int> labels_train;
-    at_<float> images_test;
+    Mat_<float> images_test;
     vector<int> labels_test;
     bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images, labels_train);
     success = loadData(dir, batch_names[1], ImgCountPerBatch, images, labels_train);
