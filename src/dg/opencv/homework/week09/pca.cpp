@@ -13,7 +13,7 @@ using namespace std;
 using namespace cv;
 using namespace cv::ml;
 
-bool loadData(const string& dir, const string& batchName, size_t imgCount, Mat& images, vector<int>& labels)
+bool loadData(const string& dir, const string& batchName, size_t imgCount, vector<Mat>& images, vector<int>& labels)
 {
     // image block size : 32*32
     const int PATCH_SIZE = 32;
@@ -48,7 +48,7 @@ bool loadData(const string& dir, const string& batchName, size_t imgCount, Mat& 
             Mat gray_img;
             cvtColor(rgb_img, gray_img, CV_RGB2GRAY);
             gray_img = gray_img.reshape(0,1);
-            gray_img.convertTo(gray_img, CV_32FC1);
+            // gray_img.convertTo(gray_img, CV_32FC1);
             images.push_back(gray_img);
             labels.push_back(class_label);
         }
@@ -95,16 +95,27 @@ int main()
     };
 
     size_t ImgCountPerBatch = 10000;
+    vector<Mat> images;
+    Mat images_pca;
     Mat_<float> images_train;
     vector<int> labels_train;
-    Mat_<float> images_test;
+    
     vector<int> labels_test;
-    bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images_train, labels_train);
-    success = loadData(dir, batch_names[1], ImgCountPerBatch, images_train, labels_train);
-    success = loadData(dir, batch_names[2], ImgCountPerBatch, images_train, labels_train);
-    success = loadData(dir, batch_names[3], ImgCountPerBatch, images_train, labels_train);
-    success = loadData(dir, batch_names[4], ImgCountPerBatch, images_train, labels_train);
-    success = loadData(dir, batch_names[5], ImgCountPerBatch, images_test, labels_test);
+    bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images, labels_train);
+    success = loadData(dir, batch_names[1], ImgCountPerBatch, images, labels_train);
+    success = loadData(dir, batch_names[2], ImgCountPerBatch, images, labels_train);
+    success = loadData(dir, batch_names[3], ImgCountPerBatch, images, labels_train);
+    success = loadData(dir, batch_names[4], ImgCountPerBatch, images, labels_train);
+    images_pca = formatImagesForPCA(images);
+    PCA pca(images_pca, cv::Mat(), PCA::DATA_AS_ROW, 0.95);
+    images_pca.convertTo(images_train, CV_32FC1);
+    
+    images.clear()
+    success = loadData(dir, batch_names[5], ImgCountPerBatch, images, labels_test);
+    Mat_<float> images_test(images.size(), images.at(0).size(), CV_64FC1);
+    for(int i=0; i<images_test.rows; ++i)
+         for(int j=0; j<images_test.cols; ++j)
+              images_test.at<double>(i, j) = images.at(i).at(j);
 
     Mat_<float> responses(labels_train.size(), 10);
     for (int i = 0; i<labels_train.size(); ++i)
