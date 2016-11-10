@@ -122,7 +122,7 @@ int main()
     PCA pca(images_pca, cv::Mat(), PCA::DATA_AS_ROW, 0.95);
     images_pca.convertTo(images_train, CV_32FC1);
     
-    images.clear()
+    images.clear();
     success = loadData(dir, batch_names[5], ImgCountPerBatch, images, labels_test);
     for(int i=0; i<images.size(); ++i)
         images_test.push_back(images[i]);
