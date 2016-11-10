@@ -113,6 +113,7 @@ int main()
     vector<int> labels_train;
     Mat_<float> images_test;
     vector<int> labels_test;
+    printf("load train data ...\n");
     bool success = loadData(dir, batch_names[0], ImgCountPerBatch, images, labels_train);
     success = loadData(dir, batch_names[1], ImgCountPerBatch, images, labels_train);
     success = loadData(dir, batch_names[2], ImgCountPerBatch, images, labels_train);
@@ -123,6 +124,7 @@ int main()
     images_pca.convertTo(images_train, CV_32FC1);
     
     images.clear();
+    printf("load test data ...\n");
     success = loadData(dir, batch_names[5], ImgCountPerBatch, images, labels_test);
     for(int i=0; i<images.size(); ++i)
         images_test.push_back(images[i]);
