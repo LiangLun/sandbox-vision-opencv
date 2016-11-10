@@ -120,16 +120,27 @@ int main()
     success = loadData(dir, batch_names[3], ImgCountPerBatch, images, labels_train);
     success = loadData(dir, batch_names[4], ImgCountPerBatch, images, labels_train);
     images_pca = formatImagesForPCA(images);
-    PCA pca(images_pca, cv::Mat(), PCA::DATA_AS_ROW, 0.95);
+    Mat_<double> mean;
+    PCA pca(images_pca, mean, PCA::DATA_AS_ROW, 0.95);
+    images_pca = pca.project(images_pca);
     images_pca.convertTo(images_train, CV_32FC1);
-    
+
+    // clear
     images.clear();
+    
     printf("load test data ...\n");
     success = loadData(dir, batch_names[5], ImgCountPerBatch, images, labels_test);
-    for(int i=0; i<images.size(); ++i)
-        images_test.push_back(images[i]);
-    images_test.convertTo(images_test, CV_32FC1);
+    images_pca = formatImagesForPCA(images);
+    images_pca = pca.project(images_pca);
+    images_pca.convertTo(images_test, CV_32FC1);
+    // for(int i=0; i<images.size(); ++i) {
+    //     Mat work = images[i];
+    //     work.convertTo(work, CV_32FC1);
+    //     images_test.push_back(work);
+    // }
+    // images_test.convertTo(images_test, CV_32FC1);
 
+    printf("reformat label data...\n");
     Mat_<float> responses(labels_train.size(), 10);
     for (int i = 0; i<labels_train.size(); ++i)
     {
@@ -162,15 +173,22 @@ int main()
     }
 
     // Create the neural network
-    Mat_<int> layerSizes(1, 3);
+    Mat_<int> layerSizes(1, 4);
     layerSizes(0, 0) = images_train.cols;
-    layerSizes(0, 1) = 1000;
+    layerSizes(0, 1) = 500;
+    // layerSizes(0, 2) = 20;
     layerSizes(0, 2) = responses.cols;
+
+    cout << "image_train.cols :" << images_train.cols << endl;
+    cout << "responses.cols :" << responses.cols << endl;
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
     network->setLayerSizes(layerSizes);
     network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
     network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
+    // network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 1, 1);
+    // network->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 300, FLT_EPSILON));
+    //network->setTrainMethod(ANN_MLP::BACKPROP, 0.001);
     
     printf("Create train data ...\n");
     Ptr<TrainData> trainData = TrainData::create(images_train, ROW_SAMPLE, responses);
