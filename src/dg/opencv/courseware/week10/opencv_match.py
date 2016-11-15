@@ -9,7 +9,7 @@ from numpy import linalg as la
 
 import cv2
 
-folder = "/Users/luoyun/Downloads/101_ObjectCategories/accordion/"
+folder = "./accordion/"
 
 """计算相似度"""
 #1.欧式距离
