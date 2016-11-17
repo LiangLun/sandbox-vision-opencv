@@ -6,9 +6,9 @@ wget --no-check-certificate --no-cookies --header "Cookie: license=accept-secure
 tar zxvf 101_ObjectCategories.tar.gz
 
 python opencv_match.py
-
 python opencv_match.py -s pearson -f hash
+python opencv_match.py -s pearson -f rgb
+# python opencv_match.py -s pearson -f otsu
 
-
-
+python opencv_match.py -s hamming -f rgb
 
