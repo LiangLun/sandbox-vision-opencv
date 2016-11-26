@@ -188,11 +188,11 @@ int main()
 
     Ptr<ANN_MLP> network = ANN_MLP::create();
     network->setLayerSizes(layerSizes);
-    network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
-    network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
-    // network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 1, 1);
-    // network->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 300, FLT_EPSILON));
-    //network->setTrainMethod(ANN_MLP::BACKPROP, 0.001);
+    // network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 0.1, 0.1);
+    // network->setTrainMethod(ANN_MLP::BACKPROP, 0.1, 0.1);
+    network->setActivationFunction(ANN_MLP::SIGMOID_SYM, 1, 1);
+    network->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 300, FLT_EPSILON));
+    network->setTrainMethod(ANN_MLP::BACKPROP, 0.001);
     
     printf("Create train data ...\n");
     Ptr<TrainData> trainData = TrainData::create(images_train, ROW_SAMPLE, responses);
