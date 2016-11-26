@@ -5,15 +5,31 @@
 unzip pos.zip -d ./positive_images
 unzip neg.zip -d ./negative_images
 
+# create sample file list
 find ./positive_images/pos_forigner -iname "*.jpg" > positives.txt
 find ./negative_images/neg -iname "*.jpg" > negatives.txt
 
+# create sample
 perl createsamples.pl positives.txt negatives.txt samples 1500\
   "opencv_createsamples -bgcolor 0 -bgthresh 0 -maxxangle 1.1\
   -maxyangle 1.1 maxzangle 0.5 -maxidev 40 -w 20 -h 20"
 
+# merge vector files to one file
 python ./mergevec.py -v samples/ -o samples.vec
 
+# train
+opencv_traincascade -data classifier -vec samples.vec -bg negatives.txt -numStages 20 -minHitRate 0.99 -maxFalseAlarmRate 0.5 -numPos 400 -numNeg 600 -w 20 -h 20 -mode ALL -precalcValBufSize 1024 -precalcIdxBufSize 1024
+
+# compile
+gcc -o facedetect facedetect.cpp -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -lopencv_ml -lopencv_objdetect -lopencv_videoio  -std=c++11 -L/usr/lib64 -lstdc++
+
+# test
+./facedetect --cascade="cascade.xml" test.jpg
+
+
+```
+
+```bash
 opencv_traincascade -data classifier -vec samples.vec -bg negatives.txt\
   -numStages 20 -minHitRate 0.995 -maxFalseAlarmRate 0.5 -numPos 1500\
   -numNeg 5024 -w 20 -h 20 -mode ALL -precalcValBufSize 1024\
@@ -23,13 +39,6 @@ cd ~/opencv-2.4.9/samples/c
 chmod +x build_all.sh
 ./build_all.sh
 ./facedetect --cascade="~/finished_classifier.xml"
-
-```
-
-```bash
-gcc -o facedetect facedetect.cpp -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -lopencv_ml -lopencv_objdetect -lopencv_videoio  -std=c++11 -L/usr/lib64 -lstdc++
-./facedetect lena.jpg
-./facedetect --cascade="cascade.xml" test.jpg
 ```
 
 
