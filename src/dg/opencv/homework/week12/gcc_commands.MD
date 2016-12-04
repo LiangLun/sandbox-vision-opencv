@@ -2,11 +2,20 @@
 wget http://pascal.inrialpes.fr/data/human/INRIAPerson.tar
 tar -zxvf INRIAPerson.tar
 
+# create base filename list for pos & neg
+ls -1 ./INRIAPerson/96X160H96/Train/pos/ | tr '\n' '\0' | xargs -0 -n 1 basename > pos.lst
+create filename list for neg
+ls -1 ./INRIAPerson/Train/neg/ | tr '\n' '\0' | xargs -0 -n 1 basename > neg.lst
 
+# create a filename list for pos & neg
+ls -d -1 INRIAPerson/96X160H96/Train/pos/*.* > pos.lst
+ls -d -1 INRIAPerson/Train/neg/*.* > neg.lst
 
-g++ -o test_ped test_ped.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_objdetect -std=c++11
+g++ -o peopledetect peopledetect.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_objdetect -lopencv_videoio -lopencv_ml -std=c++11
+./peopledetect
 
-g++ -o peopledetect peopledetect.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_objdetect -lopencv_videoio -std=c++11
-
-
+# create test_svm.xml
+./peopledetect train
+./peopledetect test_image ./test.jpg
+./peopledetect test_video ./vtest.avi
 
